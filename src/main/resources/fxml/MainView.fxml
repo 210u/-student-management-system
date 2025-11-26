@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.student.app.controller.MainController"
+            stylesheets="@../styles/main.css"
+            prefWidth="1000" prefHeight="700">
+
+    <top>
+        <HBox styleClass="header-panel" alignment="CENTER_LEFT">
+            <Label text="Student Management System" styleClass="header-title"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Add Student" onAction="#handleAddStudent" styleClass="button, button-success"/>
+                <Button text="Edit" onAction="#handleEditStudent" styleClass="button"/>
+                <Button text="Delete" onAction="#handleDeleteStudent" styleClass="button, button-danger"/>
+                <Button text="Refresh" onAction="#handleRefresh" styleClass="button"/>
+            </HBox>
+
+            <TableView fx:id="studentTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="matriculeColumn" text="Matricule" prefWidth="100"/>
+                    <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="120"/>
+                    <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="120"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
+                    <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="100"/>
+                    <TableColumn fx:id="majorColumn" text="Major" prefWidth="120"/>
+                    <TableColumn fx:id="gpaColumn" text="GPA" prefWidth="60"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox style="-fx-padding: 10; -fx-background-color: #ecf0f1;" alignment="CENTER_RIGHT">
+            <Label text="Ready" fx:id="statusLabel"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
