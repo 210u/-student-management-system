@@ -28,6 +28,8 @@ public class CourseController {
     private TableColumn<Course, String> titleColumn;
     @FXML
     private TableColumn<Course, Number> creditColumn;
+    @FXML
+    private TableColumn<Course, String> teacherColumn;
 
     private CourseDAO courseDAO;
     private ObservableList<Course> courseData = FXCollections.observableArrayList();
@@ -39,6 +41,7 @@ public class CourseController {
         codeColumn.setCellValueFactory(cellData -> cellData.getValue().codeProperty());
         titleColumn.setCellValueFactory(cellData -> cellData.getValue().titleProperty());
         creditColumn.setCellValueFactory(cellData -> cellData.getValue().creditHoursProperty());
+        teacherColumn.setCellValueFactory(cellData -> cellData.getValue().teacherNameProperty());
 
         loadCourses();
     }
@@ -56,6 +59,20 @@ public class CourseController {
         if (okClicked) {
             courseDAO.addCourse(tempCourse);
             loadCourses();
+        }
+    }
+
+    @FXML
+    private void handleEditCourse() {
+        Course selected = courseTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            boolean okClicked = showCourseEditDialog(selected);
+            if (okClicked) {
+                courseDAO.updateCourse(selected);
+                loadCourses();
+            }
+        } else {
+            showAlert("No Selection", "Please select a course to edit.");
         }
     }
 

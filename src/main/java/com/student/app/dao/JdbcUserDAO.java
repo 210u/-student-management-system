@@ -20,11 +20,7 @@ public class JdbcUserDAO implements UserDAO {
             pstmt.setString(1, username);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(new User(
-                            rs.getInt("id"),
-                            rs.getString("username"),
-                            rs.getString("password"),
-                            rs.getString("role")));
+                    return Optional.of(mapResultSetToUser(rs));
                 }
             }
         } catch (SQLException e) {
@@ -35,16 +31,37 @@ public class JdbcUserDAO implements UserDAO {
 
     @Override
     public void createUser(User user) {
-        String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, role, student_id, teacher_id) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getRole());
+            if (user.getStudentId() != null) {
+                pstmt.setInt(4, user.getStudentId());
+            } else {
+                pstmt.setNull(4, java.sql.Types.INTEGER);
+            }
+            if (user.getTeacherId() != null) {
+                pstmt.setInt(5, user.getTeacherId());
+            } else {
+                pstmt.setNull(5, java.sql.Types.INTEGER);
+            }
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        return new User(
+            rs.getInt("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("role"),
+            (Integer) rs.getObject("student_id"),
+            (Integer) rs.getObject("teacher_id")
+        );
     }
 }

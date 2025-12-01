@@ -38,7 +38,12 @@ public class Student {
         this.imagePath.set(imagePath);
     }
 
-    public Student(String john, String doe, String mail, String cs, double v) {
+    public Student(String firstName, String lastName, String email, String major, double gpa) {
+        this.firstName.set(firstName);
+        this.lastName.set(lastName);
+        this.email.set(email);
+        this.major.set(major);
+        this.gpa.set(gpa);
     }
 
     // ID Property

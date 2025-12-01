@@ -5,6 +5,7 @@ import com.student.app.service.AuthenticationService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -12,31 +13,61 @@ import java.io.IOException;
 public class MainLayoutController {
 
     @FXML
-    private BorderPane rootPane; // This is the BorderPane itself if we inject it, but usually we inject the
-                                 // center
-
-    // We need to access the BorderPane of this controller to set the center.
-    // Since the controller is instantiated by FXMLLoader, we can't easily pass the
-    // root node unless we do it from Main.
-    // Alternatively, we can bind the root element in FXML to a field if it has an
-    // ID? No, root doesn't work like that easily.
-    // Better approach: @FXML private BorderPane mainContainer; and give ID to
-    // BorderPane in FXML?
-    // Actually, in the FXML, the root element IS the BorderPane.
-    // Let's assume we can get the scene's root or pass it.
-
-    // Simpler: Let Main.java handle the switching, or have this controller manage
-    // the center.
-    // Let's give the BorderPane an fx:id="mainContainer"
+    private BorderPane rootPane;
 
     @FXML
-    private BorderPane mainContainer; // Need to add fx:id="mainContainer" to BorderPane in FXML
+    private BorderPane mainContainer;
+
+    // Sidebar buttons
+    @FXML
+    private Button dashboardButton;
+    @FXML
+    private Button studentsButton;
+    @FXML
+    private Button teachersButton;
+    @FXML
+    private Button majorsButton;
+    @FXML
+    private Button coursesButton;
+    @FXML
+    private Button gradesButton;
+    @FXML
+    private Button settingsButton;
 
     private Main mainApp;
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
-        showDashboard(); // Default view
+        configureUIForRole();
+        showDefaultView();
+    }
+
+    private void configureUIForRole() {
+        // Hide all admin menus for students
+        if (AuthenticationService.isStudent()) {
+            dashboardButton.setVisible(false);
+            dashboardButton.setManaged(false);
+            studentsButton.setVisible(false);
+            studentsButton.setManaged(false);
+            teachersButton.setVisible(false);
+            teachersButton.setManaged(false);
+            majorsButton.setVisible(false);
+            majorsButton.setManaged(false);
+            coursesButton.setVisible(false);
+            coursesButton.setManaged(false);
+            gradesButton.setVisible(false);
+            gradesButton.setManaged(false);
+            settingsButton.setVisible(false);
+            settingsButton.setManaged(false);
+        }
+    }
+
+    private void showDefaultView() {
+        if (AuthenticationService.isStudent()) {
+            showStudentProfile();
+        } else {
+            showDashboard();
+        }
     }
 
     @FXML
@@ -47,6 +78,16 @@ public class MainLayoutController {
     @FXML
     private void showStudents() {
         loadView("/fxml/MainView.fxml");
+    }
+
+    @FXML
+    private void showTeachers() {
+        loadView("/fxml/TeacherView.fxml");
+    }
+
+    @FXML
+    private void showMajors() {
+        loadView("/fxml/MajorView.fxml");
     }
 
     @FXML
@@ -65,6 +106,10 @@ public class MainLayoutController {
         System.out.println("Show Settings");
     }
 
+    private void showStudentProfile() {
+        loadView("/fxml/StudentProfileView.fxml");
+    }
+
     @FXML
     private void handleLogout() {
         AuthenticationService.logout();
@@ -76,12 +121,6 @@ public class MainLayoutController {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(fxmlPath));
             Parent view = loader.load();
-            // We need to access the root BorderPane.
-            // Since we can't easily inject the root node into the controller of the root
-            // node itself via @FXML (it's null during initialize),
-            // we will rely on Main.java to give us the reference or we use a hack.
-            // Wait, if we add fx:id="mainContainer" to the BorderPane in FXML, it SHOULD be
-            // injected.
             if (mainContainer != null) {
                 mainContainer.setCenter(view);
             }

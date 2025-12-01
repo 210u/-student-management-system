@@ -17,6 +17,7 @@
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Add Course" onAction="#handleAddCourse" styleClass="button, button-success"/>
+        <Button text="Edit" onAction="#handleEditCourse" styleClass="button"/>
         <Button text="Delete" onAction="#handleDeleteCourse" styleClass="button, button-danger"/>
     </HBox>
 
@@ -25,6 +26,7 @@
             <TableColumn fx:id="codeColumn" text="Course Code" prefWidth="150"/>
             <TableColumn fx:id="titleColumn" text="Course Title" prefWidth="300"/>
             <TableColumn fx:id="creditColumn" text="Credit Hours" prefWidth="100"/>
+            <TableColumn fx:id="teacherColumn" text="Teacher" prefWidth="200"/>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

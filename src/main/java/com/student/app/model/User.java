@@ -4,7 +4,9 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private String role; // ADMIN, LECTURER
+    private String role; // ADMIN, LECTURER, STUDENT
+    private Integer studentId; // Nullable - only for STUDENT role
+    private Integer teacherId; // Nullable - only for LECTURER role
 
     public User() {
     }
@@ -14,6 +16,15 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public User(int id, String username, String password, String role, Integer studentId, Integer teacherId) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.studentId = studentId;
+        this.teacherId = teacherId;
     }
 
     public int getId() {
@@ -47,6 +58,22 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     @Override

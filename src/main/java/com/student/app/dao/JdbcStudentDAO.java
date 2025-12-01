@@ -16,7 +16,7 @@ public class JdbcStudentDAO implements StudentDAO {
 
     @Override
     public void addStudent(Student student) {
-        String sql = "INSERT INTO students (matricule, first_name, last_name, email, phone, address, gender, major, gpa, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO students (matricule, first_name, last_name, email, phone, address, gender, gpa, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -27,9 +27,8 @@ public class JdbcStudentDAO implements StudentDAO {
             pstmt.setString(5, student.getPhone());
             pstmt.setString(6, student.getAddress());
             pstmt.setString(7, student.getGender());
-            pstmt.setString(8, student.getMajor());
-            pstmt.setDouble(9, student.getGpa());
-            pstmt.setString(10, student.getImagePath());
+            pstmt.setDouble(8, student.getGpa());
+            pstmt.setString(9, student.getImagePath());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -81,7 +80,7 @@ public class JdbcStudentDAO implements StudentDAO {
 
     @Override
     public void updateStudent(Student student) {
-        String sql = "UPDATE students SET matricule = ?, first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, gender = ?, major = ?, gpa = ?, image_path = ? WHERE id = ?";
+        String sql = "UPDATE students SET matricule = ?, first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, gender = ?, gpa = ?, image_path = ? WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -92,10 +91,9 @@ public class JdbcStudentDAO implements StudentDAO {
             pstmt.setString(5, student.getPhone());
             pstmt.setString(6, student.getAddress());
             pstmt.setString(7, student.getGender());
-            pstmt.setString(8, student.getMajor());
-            pstmt.setDouble(9, student.getGpa());
-            pstmt.setString(10, student.getImagePath());
-            pstmt.setInt(11, student.getId());
+            pstmt.setDouble(8, student.getGpa());
+            pstmt.setString(9, student.getImagePath());
+            pstmt.setInt(10, student.getId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -126,7 +124,7 @@ public class JdbcStudentDAO implements StudentDAO {
                 rs.getString("phone"),
                 rs.getString("address"),
                 rs.getString("gender"),
-                rs.getString("major"),
+                null, // major is now managed via student_majors table
                 rs.getDouble("gpa"),
                 rs.getString("image_path"));
     }

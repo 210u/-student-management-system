@@ -57,17 +57,19 @@ public class DatabaseManager {
         try (Connection conn = getConnection();
                 var stmt = conn.createStatement()) {
 
-            // Users Table
+            // Users Table (extended with student_id and teacher_id)
             stmt.execute("""
                         CREATE TABLE IF NOT EXISTS users (
                             id INT AUTO_INCREMENT PRIMARY KEY,
                             username VARCHAR(50) UNIQUE NOT NULL,
                             password VARCHAR(100) NOT NULL,
-                            role VARCHAR(20) NOT NULL
+                            role VARCHAR(20) NOT NULL,
+                            student_id INT,
+                            teacher_id INT
                         )
                     """);
 
-            // Students Table (Extended)
+            // Students Table (removed major field)
             stmt.execute("""
                         CREATE TABLE IF NOT EXISTS students (
                             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,9 +80,22 @@ public class DatabaseManager {
                             phone VARCHAR(20),
                             address VARCHAR(255),
                             gender VARCHAR(10),
-                            major VARCHAR(50),
                             gpa DOUBLE DEFAULT 0.0,
                             image_path VARCHAR(255)
+                        )
+                    """);
+
+            // Teachers Table
+            stmt.execute("""
+                        CREATE TABLE IF NOT EXISTS teachers (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            employee_id VARCHAR(20) UNIQUE NOT NULL,
+                            first_name VARCHAR(50) NOT NULL,
+                            last_name VARCHAR(50) NOT NULL,
+                            email VARCHAR(100) UNIQUE NOT NULL,
+                            phone VARCHAR(20),
+                            department VARCHAR(50),
+                            specialization VARCHAR(100)
                         )
                     """);
 
@@ -89,7 +104,45 @@ public class DatabaseManager {
                         CREATE TABLE IF NOT EXISTS courses (
                             code VARCHAR(20) PRIMARY KEY,
                             title VARCHAR(100) NOT NULL,
-                            credit_hours INT NOT NULL
+                            credit_hours INT NOT NULL,
+                            teacher_id INT,
+                            FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE SET NULL
+                        )
+                    """);
+
+            // Majors Table
+            stmt.execute("""
+                        CREATE TABLE IF NOT EXISTS majors (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            code VARCHAR(20) UNIQUE NOT NULL,
+                            name VARCHAR(100) NOT NULL,
+                            description VARCHAR(500),
+                            active BOOLEAN DEFAULT TRUE
+                        )
+                    """);
+
+            // Student_Majors Table (junction with history)
+            stmt.execute("""
+                        CREATE TABLE IF NOT EXISTS student_majors (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            student_id INT NOT NULL,
+                            major_id INT NOT NULL,
+                            start_date DATE NOT NULL,
+                            end_date DATE,
+                            is_active BOOLEAN DEFAULT TRUE,
+                            FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+                            FOREIGN KEY (major_id) REFERENCES majors(id) ON DELETE CASCADE
+                        )
+                    """);
+
+            // Major_Courses Table (junction between Major and Course)
+            stmt.execute("""
+                        CREATE TABLE IF NOT EXISTS major_courses (
+                            major_id INT,
+                            course_code VARCHAR(20),
+                            PRIMARY KEY (major_id, course_code),
+                            FOREIGN KEY (major_id) REFERENCES majors(id) ON DELETE CASCADE,
+                            FOREIGN KEY (course_code) REFERENCES courses(code) ON DELETE CASCADE
                         )
                     """);
 

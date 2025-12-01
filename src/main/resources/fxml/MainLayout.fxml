@@ -18,11 +18,13 @@
                 <Label text="SMS" style="-fx-text-fill: white;"/>
             </VBox>
             
-            <Button text="Dashboard" onAction="#showDashboard" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Students" onAction="#showStudents" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Courses" onAction="#showCourses" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Grades" onAction="#showGrades" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Settings" onAction="#showSettings" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="dashboardButton" text="Dashboard" onAction="#showDashboard" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="studentsButton" text="Students" onAction="#showStudents" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="teachersButton" text="Teachers" onAction="#showTeachers" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="majorsButton" text="Majors" onAction="#showMajors" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="coursesButton" text="Courses" onAction="#showCourses" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="gradesButton" text="Grades" onAction="#showGrades" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button fx:id="settingsButton" text="Settings" onAction="#showSettings" styleClass="sidebar-button" maxWidth="Infinity"/>
             
             <VBox VBox.vgrow="ALWAYS"/>
             

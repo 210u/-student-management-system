@@ -1,10 +1,14 @@
 package com.student.app.controller;
 
+import com.student.app.model.Major;
 import com.student.app.model.Student;
+import com.student.app.service.MajorService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * Controller for the Student Add/Edit Form.
@@ -16,12 +20,37 @@ public class StudentFormController {
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
-    @FXML private TextField majorField;
-    @FXML private TextField gpaField;
+    @FXML private ComboBox<Major> majorComboBox;
 
     private Stage dialogStage;
     private Student student;
     private boolean okClicked = false;
+    private MajorService majorService;
+
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the FXML file has been loaded.
+     */
+    @FXML
+    private void initialize() {
+        majorService = new MajorService();
+
+        // Load active majors into ComboBox
+        majorComboBox.getItems().setAll(majorService.getActiveMajors());
+
+        // Set custom display for ComboBox items
+        majorComboBox.setConverter(new StringConverter<Major>() {
+            @Override
+            public String toString(Major major) {
+                return major != null ? major.getCode() + " - " + major.getName() : "";
+            }
+
+            @Override
+            public Major fromString(String string) {
+                return null; // Not needed for our use case
+            }
+        });
+    }
 
     /**
      * Sets the stage of this dialog.
@@ -43,8 +72,16 @@ public class StudentFormController {
         lastNameField.setText(student.getLastName());
         emailField.setText(student.getEmail());
         phoneField.setText(student.getPhone());
-        majorField.setText(student.getMajor());
-        gpaField.setText(Double.toString(student.getGpa()));
+
+        // Select the major in ComboBox if editing an existing student
+        if (student.getMajor() != null && !student.getMajor().isEmpty()) {
+            for (Major major : majorComboBox.getItems()) {
+                if (major.getCode().equals(student.getMajor()) || major.getName().equals(student.getMajor())) {
+                    majorComboBox.getSelectionModel().select(major);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -63,8 +100,12 @@ public class StudentFormController {
             student.setLastName(lastNameField.getText());
             student.setEmail(emailField.getText());
             student.setPhone(phoneField.getText());
-            student.setMajor(majorField.getText());
-            student.setGpa(Double.parseDouble(gpaField.getText()));
+
+            // Get selected major from ComboBox
+            Major selectedMajor = majorComboBox.getSelectionModel().getSelectedItem();
+            if (selectedMajor != null) {
+                student.setMajor(selectedMajor.getCode());
+            }
 
             okClicked = true;
             dialogStage.close();
@@ -98,19 +139,8 @@ public class StudentFormController {
         if (phoneField.getText() == null || phoneField.getText().length() == 0) {
             errorMessage += "No valid phone number!\n";
         }
-        if (majorField.getText() == null || majorField.getText().length() == 0) {
-            errorMessage += "No valid major!\n";
-        }
-
-        if (gpaField.getText() == null || gpaField.getText().length() == 0) {
-            errorMessage += "No valid GPA!\n";
-        } else {
-            // try to parse the GPA into a double
-            try {
-                Double.parseDouble(gpaField.getText());
-            } catch (NumberFormatException e) {
-                errorMessage += "No valid GPA (must be a number)!\n";
-            }
+        if (majorComboBox.getSelectionModel().getSelectedItem() == null) {
+            errorMessage += "No major selected!\n";
         }
 
         if (errorMessage.length() == 0) {

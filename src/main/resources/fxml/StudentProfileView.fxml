@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.student.app.controller.StudentProfileController"
+      stylesheets="@../styles/main.css"
+      spacing="20" style="-fx-padding: 20;">
+
+    <Label text="My Profile" styleClass="header-title" style="-fx-text-fill: #2c3e50;"/>
+
+    <!-- Personal Information Card -->
+    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+        <Label text="Personal Information" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 15 0;"/>
+        
+        <GridPane hgap="20" vgap="15">
+            <Label text="Matricule:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="matriculeLabel" text="-" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Full Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="fullNameLabel" text="-" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="emailLabel" text="-" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Phone:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="phoneLabel" text="-" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Address:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="addressLabel" text="-" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Gender:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="genderLabel" text="-" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        </GridPane>
+    </VBox>
+
+    <!-- GPA Card -->
+    <VBox style="-fx-background-color: #3498db; -fx-padding: 20; -fx-background-radius: 5;">
+        <Label text="Current GPA" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+        <Label fx:id="gpaLabel" text="0.00" style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;"/>
+    </VBox>
+
+    <!-- Majors and Courses Section -->
+    <HBox spacing="20">
+        <!-- Active Majors -->
+        <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);" HBox.hgrow="ALWAYS">
+            <Label text="My Majors" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+            <ListView fx:id="majorsListView" prefHeight="200"/>
+        </VBox>
+
+        <!-- Enrolled Courses -->
+        <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);" HBox.hgrow="ALWAYS">
+            <Label text="My Courses" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+            <ListView fx:id="coursesListView" prefHeight="200"/>
+        </VBox>
+    </HBox>
+
+</VBox>

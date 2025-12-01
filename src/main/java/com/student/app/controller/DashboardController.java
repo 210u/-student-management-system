@@ -1,6 +1,7 @@
 package com.student.app.controller;
 
 import com.student.app.service.StudentService;
+import com.student.app.service.TeacherService;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -17,35 +18,59 @@ public class DashboardController {
     @FXML
     private Label totalMajorsLabel;
     @FXML
+    private Label totalTeachersLabel;
+    @FXML
     private PieChart majorPieChart;
     @FXML
     private BarChart<String, Number> gpaBarChart;
 
     private StudentService studentService;
+    private TeacherService teacherService;
 
     public void initialize() {
         studentService = new StudentService();
+        teacherService = new TeacherService();
         loadStats();
     }
 
     private void loadStats() {
         var students = studentService.getAllStudents();
+        var teachers = teacherService.getAllTeachers();
 
         // Total Students
         totalStudentsLabel.setText(String.valueOf(students.size()));
 
-        // Total Majors
-        long majorCount = students.stream().map(s -> s.getMajor()).distinct().count();
+        // Total Majors - filter out null values
+        long majorCount = students.stream()
+                .map(s -> s.getMajor())
+                .filter(major -> major != null && !major.isEmpty())
+                .distinct()
+                .count();
         totalMajorsLabel.setText(String.valueOf(majorCount));
 
+        // Total Teachers
+        totalTeachersLabel.setText(String.valueOf(teachers.size()));
+
         // Pie Chart: Students per Major
+        // Filter out students with null majors and group the rest
         Map<String, Long> studentsPerMajor = students.stream()
+                .filter(s -> s.getMajor() != null && !s.getMajor().isEmpty())
                 .collect(Collectors.groupingBy(s -> s.getMajor(), Collectors.counting()));
+
+        // Count students without major
+        long studentsWithoutMajor = students.stream()
+                .filter(s -> s.getMajor() == null || s.getMajor().isEmpty())
+                .count();
 
         majorPieChart.getData().clear();
         studentsPerMajor.forEach((major, count) -> {
             majorPieChart.getData().add(new PieChart.Data(major, count));
         });
+
+        // Add "No Major" category if there are students without major
+        if (studentsWithoutMajor > 0) {
+            majorPieChart.getData().add(new PieChart.Data("No Major", studentsWithoutMajor));
+        }
 
         // Bar Chart: GPA Distribution
         // Group by GPA ranges: 0-1, 1-2, 2-3, 3-4

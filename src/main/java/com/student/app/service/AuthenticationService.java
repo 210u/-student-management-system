@@ -3,7 +3,6 @@ package com.student.app.service;
 import com.student.app.dao.JdbcUserDAO;
 import com.student.app.dao.UserDAO;
 import com.student.app.model.User;
-import com.student.app.util.DatabaseManager;
 
 import java.util.Optional;
 
@@ -38,5 +37,9 @@ public class AuthenticationService {
 
     public static boolean isAdmin() {
         return currentUser != null && "ADMIN".equalsIgnoreCase(currentUser.getRole());
+    }
+
+    public static boolean isStudent() {
+        return currentUser != null && "STUDENT".equalsIgnoreCase(currentUser.getRole());
     }
 }
